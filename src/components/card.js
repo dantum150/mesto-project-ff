@@ -3,15 +3,15 @@ export function createCard(cardInfo, removeCardFunction, likeCardFunction, openI
   
     const newCardElement = newCardTemplate.querySelector('.places__item').cloneNode(true)
   
-    const NewCardImage =  newCardElement.querySelector('.card__image')
+    const newCardImage =  newCardElement.querySelector('.card__image')
     
     newCardElement.querySelector('.card__title').textContent = cardInfo.name
   
-    NewCardImage.src = cardInfo.link 
+    newCardImage.src = cardInfo.link 
   
-    NewCardImage.alt = cardInfo.name
+    newCardImage.alt = cardInfo.name
   
-    NewCardImage.addEventListener('click', (evt)=> {
+    newCardImage.addEventListener('click', (evt)=> {
       openImageFunction(evt)
     })
   
@@ -30,7 +30,7 @@ export function createCard(cardInfo, removeCardFunction, likeCardFunction, openI
     cardTag.remove()
     }
 
-    export function LikeCard(button) {
+    export function likeCard(button) {
     button.classList.toggle('card__like-button_is-active')
     }
      
