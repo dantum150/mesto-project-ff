@@ -10,6 +10,8 @@
 import { createCard, removeCard, likeCard } from "../components/card.js"
 import { openPopup, closePopup } from "../components/popup.js"
 import { initialCards } from "./cards.js";
+import {enableValidation} from '../components/validation.js'
+import { getInitialCards, editUserProfile } from "../components/api.js";
 import '../pages/index.css'; 
 
 const cardsList = document.querySelector('.places__list')
@@ -26,10 +28,17 @@ const addCardPopup = document.querySelector('.popup_type_new-card')
 const openImagePopup = document.querySelector('.popup_type_image')
 
 
-initialCards.forEach(cardInfo => {
-  const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
-  cardsList.append(newCard)
+getInitialCards().then((cards) => {
+  cards.forEach(cardInfo => {
+    const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
+    cardsList.append(newCard)
+  })
 })
+
+// initialCards.forEach(cardInfo => {
+//   const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
+//   cardsList.append(newCard)
+// })
 
 
 
@@ -61,11 +70,12 @@ editUserForm.addEventListener('submit', handleFormSubmit);
 function handleFormSubmit(evt) {
   evt.preventDefault(); 
   const popup = document.querySelector('.popup_type_edit')
-  
-  name.textContent = nameInput.value
-  description.textContent = jobInput.value
 
-  closePopup(popup)
+  editUserProfile({name:nameInput.value, about:jobInput.value}).then((user) => {
+    name.textContent = user.name
+    description.textContent = user.about
+    closePopup(popup)
+  })
 }
 
 
@@ -87,3 +97,6 @@ function handleCreateFormSubmit(evt) {
   closePopup(popup)
   evt.target.reset()
 }
+
+
+enableValidation()
