@@ -34,3 +34,57 @@ const config = {
         return user
     })
   }
+
+
+  export const getUserProfile = () => {
+    return fetch (`${config.baseUrl}users/me`, {
+        method: 'GET',
+        headers: {...config.headers},
+        body: JSON.stringify()
+    })
+        .then((res)=> {
+            if(res.status === 200){
+                return res.json()
+            }
+        })
+        .then((user)=> {
+            return user
+        })
+    }
+
+    export function initializationPage() {
+    return Promise.all([getUserProfile(), getInitialCards()])
+    }
+
+
+    export const postCard = (card) => {   // 
+        return fetch(`${config.baseUrl}cards`,{
+            method: 'POST',
+            headers: {...config.headers},
+            body: JSON.stringify(card)   // {name: 'Архыз', link:''}
+        })
+        .then((res)=> {
+            if(res.status === 200){
+                return res.json()
+            }
+        }) 
+        .then((card)=> {
+        return card
+        })
+    }
+
+    export const editAvatar = (avatar) => {
+        return fetch (`${config.baseUrl}users/me/avatar`, {
+            method: 'PATCH',
+            headers: {...config.headers},
+            body: JSON.stringify(avatar)
+        })
+        .then((res)=> {
+            if(res.status === 200){
+                return res.json()
+            }
+        })
+        .then((avatar)=> {
+            return avatar
+        })
+    }

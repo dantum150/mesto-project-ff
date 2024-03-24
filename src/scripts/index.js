@@ -11,7 +11,7 @@ import { createCard, removeCard, likeCard } from "../components/card.js"
 import { openPopup, closePopup } from "../components/popup.js"
 import { initialCards } from "./cards.js";
 import {enableValidation} from '../components/validation.js'
-import { getInitialCards, editUserProfile } from "../components/api.js";
+import { getInitialCards, editUserProfile, initializationPage, postCard, editAvatar } from "../components/api.js";
 import '../pages/index.css'; 
 
 const cardsList = document.querySelector('.places__list')
@@ -26,21 +26,38 @@ const сreateCardForm = document.querySelector('.popup__form[name = new-place]')
 const editUserPopup = document.querySelector('.popup_type_edit')
 const addCardPopup = document.querySelector('.popup_type_new-card')
 const openImagePopup = document.querySelector('.popup_type_image')
+const avatar = document.querySelector('.profile__image')
+const avatarPopup = document.querySelector('.popup_type_avatar')
+const avatarForm = document.querySelector('.popup__form[name = edit-avatar]')
 
 
-getInitialCards().then((cards) => {
-  cards.forEach(cardInfo => {
-    const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
-    cardsList.append(newCard)
-  })
+
+initializationPage().then((data) => data[1].forEach(cardInfo => {
+  const user = data[0]
+  avatar.style.backgroundImage = `url(${user.avatar})`
+  name.textContent = user.name
+  description.textContent = user.about
+  
+  const newCard = createCard(cardInfo, removeCard, likeCard, openImage, user._id)
+  cardsList.append(newCard) 
 })
+) // [{_id}, []])
+// getInitialCards().then((cards) => {
+//   cards.forEach(cardInfo => {
+//     const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
+//     cardsList.append(newCard)
+//   })
+// })
 
 // initialCards.forEach(cardInfo => {
 //   const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
 //   cardsList.append(newCard)
 // })
 
-
+avatar.addEventListener('click',() => {
+openPopup(avatarPopup)
+}
+)
 
 editButton.addEventListener('click', () => {
   openPopup(editUserPopup)
@@ -65,6 +82,18 @@ function openImage(evt) {
 
 editUserForm.addEventListener('submit', handleFormSubmit);
 сreateCardForm.addEventListener('submit', handleCreateFormSubmit)
+avatarForm.addEventListener('submit',handleEditAvatar)
+
+
+function handleEditAvatar(evt) {
+evt.preventDefault();
+const popup = document.querySelector('.popup_type_avatar')
+const linkInput = evt.target.querySelector('.popup__input_type_avatar')
+  editAvatar({avatar: linkInput.value}).then ((user)=> {
+    avatar.style.backgroundImage = `url(${user.avatar})`
+    closePopup(popup)
+  })
+}
 
 
 function handleFormSubmit(evt) {
@@ -91,11 +120,13 @@ function handleCreateFormSubmit(evt) {
   link: linkInput.value
   }
 
-  const newCard = createCard(cardInfo, removeCard, likeCard, openImage) 
-  cardsList.prepend(newCard)  
-
-  closePopup(popup)
-  evt.target.reset()
+  postCard(cardInfo).then(card => {
+    const newCard = createCard(card, removeCard, likeCard, openImage, card.owner._id) 
+    cardsList.prepend(newCard)  
+  
+    closePopup(popup)
+    evt.target.reset()
+  })
 }
 
 
