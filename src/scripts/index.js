@@ -32,6 +32,7 @@ const avatarForm = document.querySelector('.popup__form[name = edit-avatar]')
 
 
 
+
 initializationPage().then((data) => data[1].forEach(cardInfo => {
   const user = data[0]
   avatar.style.backgroundImage = `url(${user.avatar})`

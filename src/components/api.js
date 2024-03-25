@@ -88,3 +88,46 @@ const config = {
             return avatar
         })
     }
+
+    export const deleteCard = (cardId) => {
+    return fetch(`${config.baseUrl}cards/${cardId}`, {   
+        method: 'DELETE',
+        headers: {...config.headers}
+    })
+    .then((res)=> {
+        if(res.status === 200){
+            return res.json()
+        }
+    })
+    .then ((card)=> {
+        return card
+    })
+    }
+
+    export const createCardLike = (cardId) => {
+        return fetch(`${config.baseUrl}cards/${cardId}`, {
+            method: 'PUT',
+            headers: {...config.headers}
+        }).then ((res) => {
+            if(res.status === 200){
+                return res.json()
+            }
+        })
+        .then ((card)=> {
+            return card
+        })
+    }
+    
+    export const deleteCardLike = (cardId) => {
+        return fetch(`${config.baseUrl}cards/${cardId}`, {
+            method: 'DELETE',
+            headers: {...config.headers}
+        }).then ((res)=> {
+            if(res.status === 200) {
+                return res.json()
+            }
+        })
+        .then ((card)=> {
+            return card
+        })
+    }
