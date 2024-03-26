@@ -105,7 +105,7 @@ const config = {
     }
 
     export const createCardLike = (cardId) => {
-        return fetch(`${config.baseUrl}cards/${cardId}`, {
+        return fetch(`${config.baseUrl}cards/likes/${cardId}`, {
             method: 'PUT',
             headers: {...config.headers}
         }).then ((res) => {
@@ -119,7 +119,7 @@ const config = {
     }
     
     export const deleteCardLike = (cardId) => {
-        return fetch(`${config.baseUrl}cards/${cardId}`, {
+        return fetch(`${config.baseUrl}cards/likes/${cardId}`, {
             method: 'DELETE',
             headers: {...config.headers}
         }).then ((res)=> {

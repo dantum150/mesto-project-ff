@@ -8,7 +8,41 @@ export function createCard(cardInfo, removeCardFunction, likeCardFunction, openI
 
     const cardRemoveButton = newCardElement.querySelector('.card__delete-button')
 
+    const cardLikeButton = newCardElement.querySelector('.card__like-button')
+
     const cardLikeCount = newCardElement.querySelector('.card__like_count')
+    
+    const isLiked = cardInfo.likes.some((user, index, array) => user._id === userId) 
+    // forEach, map, filter, some, every => функции ((arrayElement, index, array) => )
+
+    // cardInfo.likes.forEach((user, index, array) => {
+    //   console.log(user)
+    // })
+
+    // function forEach(array, callback ) {
+    //   for(let i = 0; i < array.length; i++) {
+    //     callback(array[i], i, array)
+    //   }
+    // }
+
+    // function some(array, callback) {
+    //   let result = false;
+
+    //   for(let i = 0; i < array.length; i++) {
+    //     if(callback(array[i], i, array)) {
+    //       result = true
+    //       break
+    //     }
+    //   }
+
+    //   return result
+    // }
+
+
+    if(isLiked) {
+      cardLikeButton.classList.add('card__like-button_is-active')
+    }
+
 
     cardLikeCount.textContent= cardInfo.likes.length
     
