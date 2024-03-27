@@ -29,6 +29,7 @@ const openImagePopup = document.querySelector('.popup_type_image')
 const avatar = document.querySelector('.profile__image')
 const avatarPopup = document.querySelector('.popup_type_avatar')
 const avatarForm = document.querySelector('.popup__form[name = edit-avatar]')
+const avatarInput = document.querySelector('.popup__input_type_avatar')
 
 
 
@@ -38,11 +39,17 @@ initializationPage().then((data) => data[1].forEach(cardInfo => {
   avatar.style.backgroundImage = `url(${user.avatar})`
   name.textContent = user.name
   description.textContent = user.about
-  
+
+  nameInput.value = user.name
+  jobInput.value = user.about
+
+  avatarInput.value = user.avatar
+
   const newCard = createCard(cardInfo, removeCard, likeCard, openImage, user._id)
   cardsList.append(newCard) 
 })
-) // [{_id}, []])
+).then(()=>enableValidation())
+ // [{_id}, []])
 // getInitialCards().then((cards) => {
 //   cards.forEach(cardInfo => {
 //     const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
@@ -131,4 +138,3 @@ function handleCreateFormSubmit(evt) {
 }
 
 
-enableValidation()

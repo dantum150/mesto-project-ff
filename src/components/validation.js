@@ -49,6 +49,7 @@ const setEventListeners = (formElement) => {
         isValid(formElement, inputElement)
         toggleButtonState(inputList, buttonElement);
       });
+      inputElement.setCustomValidity(inputElement.dataset.errorMessage) 
     }); 
     
     toggleButtonState(inputList, buttonElement);

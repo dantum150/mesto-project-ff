@@ -1,5 +1,8 @@
 .popup__form {
   margin-top: 27px;
+  display: flex;
+  flex-direction: column;
+  gap:20px;
 }
 
 .popup__form__field {
@@ -10,6 +13,14 @@
   color:red;
   position:absolute;
   left: 0;
-  top: 150%;
+  top: 110%;
   width: 100%;
+  font-size: 80%;
+  z-index: 1;
+}
+
+.popup__form__field {
+display: block;
+height: 100%;
+overflow: visible;
 }

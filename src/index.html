@@ -38,12 +38,12 @@
       <h3 class="popup__title">Редактировать профиль</h3>
       <form class="popup__form" name="edit-profile" novalidate>
         <label class="popup__form__field">
-          <input id="name-input" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required minlength="2" maxlength="40" pattern="/[\А-Яа-яA-Za-z\s\ёЁ\-]/gi">
+          <input id="name-input" type="text" name="name" class="popup__input popup__input_type_name" placeholder="Имя" required minlength="2" maxlength="40" pattern="^[А-Яа-яA-Za-z\sёЁ\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
           <span class="message__error name-input-error"></span>
         </label>
 
         <label class="popup__form__field">
-          <input id="description-input" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required minlength="2" maxlength="200" pattern="/[\А-Яа-яA-Za-z\s\ёЁ\-]/gi">
+          <input id="description-input" type="text" name="description" class="popup__input popup__input_type_description" placeholder="Занятие" required minlength="2" maxlength="200" pattern="^[А-Яа-яA-Za-z\sёЁ\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
           <span class="message__error description-input-error"></span>  
         </label>
         <button type="submit" class="button popup__button">Сохранить</button>
@@ -56,7 +56,7 @@
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="new-place" novalidate>
         <label class="popup__form__field">
-        <input id="place-name-input" type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required>
+        <input id="place-name-input" type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required minlength="2" maxlength="30" pattern="^[А-Яа-яA-Za-z\sёЁ\-]+$" data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы">
         <span class="message__error place-name-input-error"></span>  
         </label>
         <label class="popup__form__field">
