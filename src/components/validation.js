@@ -1,13 +1,13 @@
-export const enableValidation = () => {
+export const enableValidation = (selectors) => {
     // Найдём все формы с указанным классом в DOM,
     // сделаем из них массив методом Array.from
-    const formList = Array.from(document.querySelectorAll('.popup__form'));
+    const formList = Array.from(document.querySelectorAll(selectors.formSelector));
   
     // Переберём полученную коллекцию
     formList.forEach((formElement) => {
       // Для каждой формы вызовем функцию setEventListeners,
       // передав ей элемент формы
-      setEventListeners(formElement);
+      setEventListeners(formElement, selectors);
     });
   };
   
@@ -23,66 +23,81 @@ const hasInvalidInput = (inputList) => {   // []input, input
     })
   }; 
 
-const toggleButtonState = (inputList, buttonElement) => {
+const toggleButtonState = (inputList, buttonElement, selectors) => {
     // Если есть хотя бы один невалидный инпут
     if (hasInvalidInput(inputList)) {
       // сделай кнопку неактивной
           buttonElement.disabled = true;
-      buttonElement.classList.add('popup__button_inactive');
+      buttonElement.classList.add(selectors.inactiveButtonClass);
     } else {
           // иначе сделай кнопку активной
           buttonElement.disabled = false;
-      buttonElement.classList.remove('popup__button_inactive');
+      buttonElement.classList.remove(selectors.inactiveButtonClass);
     }
   }; 
 
 
-const setEventListeners = (formElement) => {
-    const inputList = Array.from(formElement.querySelectorAll(`.popup__input`));
-    const buttonElement = formElement.querySelector('.popup__button');
+const setEventListeners = (formElement, selectors) => {
+    const inputList = Array.from(formElement.querySelectorAll(selectors.inputSelector));
+    const buttonElement = formElement.querySelector(selectors.submitButtonSelector);
   
     inputList.forEach((inputElement) => {
       // каждому полю добавим обработчик события input
       inputElement.addEventListener('input', () => {
         // Внутри колбэка вызовем isValid,
         // передав ей форму и проверяемый элемент
-        isValid(formElement, inputElement)
-        toggleButtonState(inputList, buttonElement);
+        inputElement.setCustomValidity('')
+        isValid(formElement, inputElement, selectors)
+        toggleButtonState(inputList, buttonElement, selectors);
       });
       inputElement.setCustomValidity(inputElement.dataset.errorMessage) 
     }); 
     
-    toggleButtonState(inputList, buttonElement);
+    toggleButtonState(inputList, buttonElement, selectors);
   };
 
-  const showInputError = (formElement, inputElement, errorMessage) => {
+  const showInputError = (formElement, inputElement, errorMessage, selectors) => {
     // Находим элемент ошибки внутри самой функции
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     // Остальной код такой же
-    inputElement.classList.add('form__input_type_error');
+    inputElement.classList.add(selectors.inputErrorClass);
     errorElement.textContent = errorMessage;
-    errorElement.classList.add('form__input-error_active');
+    errorElement.classList.add(selectors.errorClass);
   };
   
-  const hideInputError = (formElement, inputElement) => {
+  const hideInputError = (formElement, inputElement, selectors) => {
     // Находим элемент ошибки
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
     // Остальной код такой же
-    inputElement.classList.remove('form__input_type_error');
-    errorElement.classList.remove('form__input-error_active');
+    inputElement.classList.remove(selectors.inputErrorClass);
+    errorElement.classList.remove(selectors.errorClass);
     errorElement.textContent = '';
   };
 
 
 
-const isValid = (formElement, inputElement) => {
+const isValid = (formElement, inputElement, selectors) => {
   if (!inputElement.validity.valid) {
     // showInputError теперь получает параметром форму, в которой
     // находится проверяемое поле, и само это поле
-    showInputError(formElement, inputElement, inputElement.validationMessage);
+    if(inputElement.validity.paternMismatch ) {
+      inputElement.setCustomValidity(inputElement.dataset.errorMessage)
+    }
+    showInputError(formElement, inputElement, inputElement.validationMessage, selectors);
   } else {
     // hideInputError теперь получает параметром форму, в которой
     // находится проверяемое поле, и само это поле
-    hideInputError(formElement, inputElement);
+    hideInputError(formElement, inputElement, selectors);
   }
 };
+
+export function clearValidation(profileForm, validationConfig) {
+  const inputs = profileForm.querySelectorAll(validationConfig.inputSelector)
+
+  inputs.forEach((input) => {
+    const errorElement = profileForm.querySelector(`.${input.id}-error`)
+    errorElement.classList.remove(validationConfig.errorClass);
+    errorElement.textContent = ''
+    input.classList.remove(validationConfig.inputErrorClass)
+  })
+}

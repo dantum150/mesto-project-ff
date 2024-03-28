@@ -1,5 +1,5 @@
 import { deleteCard, deleteCardLike, createCardLike } from "./api"
-export function createCard(cardInfo, removeCardFunction, likeCardFunction, openImageFunction, userId) { //cardInfo {..., owner: {_id...}, likes: [] }  || userId = _id
+export function createCard(cardInfo, removeCardFunction, likeCardFunction, openImageFunction, userId) { 
     const newCardTemplate = document.querySelector('#card-template').content
   
     const newCardElement = newCardTemplate.querySelector('.places__item').cloneNode(true)
@@ -13,30 +13,7 @@ export function createCard(cardInfo, removeCardFunction, likeCardFunction, openI
     const cardLikeCount = newCardElement.querySelector('.card__like_count')
     
     const isLiked = cardInfo.likes.some((user, index, array) => user._id === userId) 
-    // forEach, map, filter, some, every => функции ((arrayElement, index, array) => )
-
-    // cardInfo.likes.forEach((user, index, array) => {
-    //   console.log(user)
-    // })
-
-    // function forEach(array, callback ) {
-    //   for(let i = 0; i < array.length; i++) {
-    //     callback(array[i], i, array)
-    //   }
-    // }
-
-    // function some(array, callback) {
-    //   let result = false;
-
-    //   for(let i = 0; i < array.length; i++) {
-    //     if(callback(array[i], i, array)) {
-    //       result = true
-    //       break
-    //     }
-    //   }
-
-    //   return result
-    // }
+   
 
 
     if(isLiked) {

@@ -10,7 +10,7 @@
 import { createCard, removeCard, likeCard } from "../components/card.js"
 import { openPopup, closePopup } from "../components/popup.js"
 import { initialCards } from "./cards.js";
-import {enableValidation} from '../components/validation.js'
+import {enableValidation, clearValidation} from '../components/validation.js'
 import { getInitialCards, editUserProfile, initializationPage, postCard, editAvatar } from "../components/api.js";
 import '../pages/index.css'; 
 
@@ -48,19 +48,15 @@ initializationPage().then((data) => data[1].forEach(cardInfo => {
   const newCard = createCard(cardInfo, removeCard, likeCard, openImage, user._id)
   cardsList.append(newCard) 
 })
-).then(()=>enableValidation())
- // [{_id}, []])
-// getInitialCards().then((cards) => {
-//   cards.forEach(cardInfo => {
-//     const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
-//     cardsList.append(newCard)
-//   })
-// })
+).then(()=>enableValidation({
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'form__input_type_error',
+  errorClass: 'form__input-error_active'
+}))
 
-// initialCards.forEach(cardInfo => {
-//   const newCard = createCard(cardInfo, removeCard, likeCard, openImage)
-//   cardsList.append(newCard)
-// })
 
 avatar.addEventListener('click',() => {
 openPopup(avatarPopup)
@@ -68,6 +64,10 @@ openPopup(avatarPopup)
 )
 
 editButton.addEventListener('click', () => {
+  clearValidation(editUserForm, {
+    inputSelector: '.popup__input', 
+    inputErrorClass: 'form__input_type_error',
+    errorClass: 'form__input-error_active'})
   openPopup(editUserPopup)
 
   nameInput.value = name.textContent

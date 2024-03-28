@@ -57,11 +57,11 @@ const config = {
     }
 
 
-    export const postCard = (card) => {   // 
+    export const postCard = (card) => {   
         return fetch(`${config.baseUrl}cards`,{
             method: 'POST',
             headers: {...config.headers},
-            body: JSON.stringify(card)   // {name: 'Архыз', link:''}
+            body: JSON.stringify(card)   
         })
         .then((res)=> {
             if(res.status === 200){
