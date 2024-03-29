@@ -52,6 +52,7 @@ export function createCard(cardInfo, removeCardFunction, likeCardFunction, openI
       deleteCard(cardId).then((card) => {
         cardTag.remove()
       })
+      .catch((err) => console.log(err))
     }
 
     export function likeCard(button, cardId, cardLikeCount) {
@@ -60,12 +61,14 @@ export function createCard(cardInfo, removeCardFunction, likeCardFunction, openI
           button.classList.remove('card__like-button_is-active')
           cardLikeCount.textContent = card.likes.length
         })
+        .catch((err) => console.log(err))
       }
       else {
         createCardLike(cardId).then((card) => {
           button.classList.add('card__like-button_is-active')
           cardLikeCount.textContent = card.likes.length
         })
+        .catch((err) => console.log(err))
       }
     }
 

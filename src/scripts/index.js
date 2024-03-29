@@ -65,6 +65,8 @@ openPopup(avatarPopup)
 
 editButton.addEventListener('click', () => {
   clearValidation(editUserForm, {
+    buttonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_inactive',
     inputSelector: '.popup__input', 
     inputErrorClass: 'form__input_type_error',
     errorClass: 'form__input-error_active'})
@@ -75,6 +77,12 @@ editButton.addEventListener('click', () => {
 })
 
 addButton.addEventListener('click', () => {
+    clearValidation(editUserForm, {
+    inputSelector: '.popup__input', 
+    buttonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_inactive',
+    inputErrorClass: 'form__input_type_error',
+    errorClass: 'form__input-error_active'})
   openPopup(addCardPopup)
 })
 

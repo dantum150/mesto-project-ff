@@ -11,7 +11,6 @@ export const enableValidation = (selectors) => {
     });
   };
   
-
 const hasInvalidInput = (inputList) => {   // []input, input
     // проходим по этому массиву методом some
     return inputList.some((inputElement) => {    // true | false
@@ -35,7 +34,6 @@ const toggleButtonState = (inputList, buttonElement, selectors) => {
       buttonElement.classList.remove(selectors.inactiveButtonClass);
     }
   }; 
-
 
 const setEventListeners = (formElement, selectors) => {
     const inputList = Array.from(formElement.querySelectorAll(selectors.inputSelector));
@@ -73,9 +71,7 @@ const setEventListeners = (formElement, selectors) => {
     errorElement.classList.remove(selectors.errorClass);
     errorElement.textContent = '';
   };
-
-
-
+  
 const isValid = (formElement, inputElement, selectors) => {
   if (!inputElement.validity.valid) {
     // showInputError теперь получает параметром форму, в которой
@@ -93,11 +89,17 @@ const isValid = (formElement, inputElement, selectors) => {
 
 export function clearValidation(profileForm, validationConfig) {
   const inputs = profileForm.querySelectorAll(validationConfig.inputSelector)
+  const button = profileForm.querySelector(validationConfig.buttonSelector)
+  const inputsList = Array.from(inputs)
 
+
+  
   inputs.forEach((input) => {
     const errorElement = profileForm.querySelector(`.${input.id}-error`)
     errorElement.classList.remove(validationConfig.errorClass);
     errorElement.textContent = ''
     input.classList.remove(validationConfig.inputErrorClass)
   })
+
+  toggleButtonState(inputsList, button, validationConfig)
 }

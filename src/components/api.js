@@ -1,3 +1,4 @@
+import { request } from "../utils"
 const config = {
     baseUrl: 'https://nomoreparties.co/v1/wff-cohort-9/',
     headers: {
@@ -7,127 +8,62 @@ const config = {
   }
   
   export const getInitialCards = () => {
-      return fetch(config.baseUrl + 'cards' , {headers: {...config.headers}})
-        .then((res) => {
-            if(res.status === 200) {
-                return res.json()
-            }
-        })
-        .then((cards) => {
-            return cards
-        })
-      // ...
+    return request(config.baseUrl + 'cards', {headers: {...config.headers}})
   } 
 
   export const editUserProfile = (user) => {
-    return fetch(`${config.baseUrl}users/me`, {
+    return request(`${config.baseUrl}users/me`, {
         method: 'PATCH',
         headers: {...config.headers},
         body:JSON.stringify(user)
     })
-    .then((res)=> {
-        if(res.status === 200){
-            return res.json()
-        }
-    })
-    .then((user) =>{
-        return user
-    })
   }
 
-
   export const getUserProfile = () => {
-    return fetch (`${config.baseUrl}users/me`, {
+    return request (`${config.baseUrl}users/me`, {
         method: 'GET',
         headers: {...config.headers},
         body: JSON.stringify()
     })
-        .then((res)=> {
-            if(res.status === 200){
-                return res.json()
-            }
-        })
-        .then((user)=> {
-            return user
-        })
     }
 
     export function initializationPage() {
     return Promise.all([getUserProfile(), getInitialCards()])
     }
 
-
     export const postCard = (card) => {   
-        return fetch(`${config.baseUrl}cards`,{
+        return request(`${config.baseUrl}cards`,{
             method: 'POST',
             headers: {...config.headers},
             body: JSON.stringify(card)   
         })
-        .then((res)=> {
-            if(res.status === 200){
-                return res.json()
-            }
-        }) 
-        .then((card)=> {
-        return card
-        })
     }
 
     export const editAvatar = (avatar) => {
-        return fetch (`${config.baseUrl}users/me/avatar`, {
+        return request (`${config.baseUrl}users/me/avatar`, {
             method: 'PATCH',
             headers: {...config.headers},
             body: JSON.stringify(avatar)
         })
-        .then((res)=> {
-            if(res.status === 200){
-                return res.json()
-            }
-        })
-        .then((avatar)=> {
-            return avatar
-        })
     }
 
     export const deleteCard = (cardId) => {
-    return fetch(`${config.baseUrl}cards/${cardId}`, {   
+    return request(`${config.baseUrl}cards/${cardId}`, {   
         method: 'DELETE',
         headers: {...config.headers}
-    })
-    .then((res)=> {
-        if(res.status === 200){
-            return res.json()
-        }
-    })
-    .then ((card)=> {
-        return card
     })
     }
 
     export const createCardLike = (cardId) => {
-        return fetch(`${config.baseUrl}cards/likes/${cardId}`, {
+        return request(`${config.baseUrl}cards/likes/${cardId}`, {
             method: 'PUT',
             headers: {...config.headers}
-        }).then ((res) => {
-            if(res.status === 200){
-                return res.json()
-            }
-        })
-        .then ((card)=> {
-            return card
         })
     }
     
     export const deleteCardLike = (cardId) => {
-        return fetch(`${config.baseUrl}cards/likes/${cardId}`, {
+        return request(`${config.baseUrl}cards/likes/${cardId}`, {
             method: 'DELETE',
             headers: {...config.headers}
-        }).then ((res)=> {
-            if(res.status === 200) {
-                return res.json()
-            }
-        })
-        .then ((card)=> {
-            return card
         })
     }
