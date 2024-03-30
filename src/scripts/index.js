@@ -17,6 +17,7 @@ import '../pages/index.css';
 const cardsList = document.querySelector('.places__list')
 const editButton = document.querySelector('.profile__edit-button')
 const addButton = document.querySelector('.profile__add-button')
+const createCardForm = document.querySelector('.popup__form[name = new-place]')
 const editUserForm = document.querySelector('.popup__form[name = edit-profile]')
 const nameInput = editUserForm.querySelector('.popup__input_type_name')
 const jobInput = editUserForm.querySelector('.popup__input_type_description')
@@ -30,7 +31,13 @@ const avatar = document.querySelector('.profile__image')
 const avatarPopup = document.querySelector('.popup_type_avatar')
 const avatarForm = document.querySelector('.popup__form[name = edit-avatar]')
 const avatarInput = document.querySelector('.popup__input_type_avatar')
-
+const textPicture = document.querySelector('.popup__caption')
+const popupAvatar = document.querySelector('.popup_type_avatar')
+const linkInput = document.querySelector('.popup__input_type_avatar')
+const popupEdit = document.querySelector('.popup_type_edit')
+const popupNewCard = document.querySelector('.popup_type_new-card')
+const nameInputCardName = document.querySelector('.popup__input_type_card-name')
+const linkInputUrl = document.querySelector('.popup__input_type_url')
 
 
 
@@ -64,6 +71,9 @@ openPopup(avatarPopup)
 )
 
 editButton.addEventListener('click', () => {
+
+  nameInput.value = name.textContent
+  jobInput.value = description.textContent
   clearValidation(editUserForm, {
     buttonSelector: '.popup__button',
     inactiveButtonClass: 'popup__button_inactive',
@@ -71,13 +81,10 @@ editButton.addEventListener('click', () => {
     inputErrorClass: 'form__input_type_error',
     errorClass: 'form__input-error_active'})
   openPopup(editUserPopup)
-
-  nameInput.value = name.textContent
-  jobInput.value = description.textContent
 })
 
 addButton.addEventListener('click', () => {
-    clearValidation(editUserForm, {
+    clearValidation(createCardForm, {
     inputSelector: '.popup__input', 
     buttonSelector: '.popup__button',
     inactiveButtonClass: 'popup__button_inactive',
@@ -89,11 +96,13 @@ addButton.addEventListener('click', () => {
 
 function openImage(evt) {
   const src = evt.target.getAttribute('src')
+  const alt = evt.target.getAttribute('alt')
+  textPicture.textContent = alt
 
   const popupImage = openPopup(openImagePopup).querySelector('.popup__image')
 
   popupImage.setAttribute('src', src)
-  popupImage.setAttribute('alt', 'Картинка')
+  popupImage.setAttribute('alt', alt)
 }
 
 editUserForm.addEventListener('submit', handleFormSubmit);
@@ -101,47 +110,61 @@ editUserForm.addEventListener('submit', handleFormSubmit);
 avatarForm.addEventListener('submit',handleEditAvatar)
 
 
+
+
 function handleEditAvatar(evt) {
 evt.preventDefault();
-const popup = document.querySelector('.popup_type_avatar')
-const linkInput = evt.target.querySelector('.popup__input_type_avatar')
+const popupButton = evt.target.querySelector('.popup__button')
+  popupButton.textContent = 'идет загрузка...'
+  popupButton.disabled = true
+
   editAvatar({avatar: linkInput.value}).then ((user)=> {
     avatar.style.backgroundImage = `url(${user.avatar})`
-    closePopup(popup)
-  })
+    closePopup(popupAvatar)
+  }).catch((e) => console.log(e)).finally(() => {
+    popupButton.textContent = 'Сохранить'
+    popupButton.disabled = false
+})
 }
-
 
 function handleFormSubmit(evt) {
   evt.preventDefault(); 
-  const popup = document.querySelector('.popup_type_edit')
+  const popupButton = evt.target.querySelector('.popup__button')
+  popupButton.textContent = 'идет загрузка...'
+  popupButton.disabled = true
 
   editUserProfile({name:nameInput.value, about:jobInput.value}).then((user) => {
     name.textContent = user.name
     description.textContent = user.about
-    closePopup(popup)
+    closePopup(popupEdit)
+  }).catch((e) => console.log(e)).finally(() => {
+    popupButton.textContent = 'Сохранить'
+    popupButton.disabled = false
   })
 }
 
 
 function handleCreateFormSubmit(evt) {
   evt.preventDefault();
-  const popup = document.querySelector('.popup_type_new-card')
-  
-  const nameInput = evt.target.querySelector('.popup__input_type_card-name')
-  const linkInput = evt.target.querySelector('.popup__input_type_url')
+  const popupButton = evt.target.querySelector('.popup__button')
+  popupButton.textContent = 'идет загрузка...'
+  popupButton.disabled = true
+
 
   const cardInfo = {
-  name: nameInput.value,
-  link: linkInput.value
+  name: nameInputCardName.value,
+  link: linkInputUrl.value
   }
 
   postCard(cardInfo).then(card => {
     const newCard = createCard(card, removeCard, likeCard, openImage, card.owner._id) 
     cardsList.prepend(newCard)  
   
-    closePopup(popup)
+    closePopup( popupNewCard)
     evt.target.reset()
+  }) .catch((e) => console.log(e)).finally(()=> {
+    popupButton.textContent = 'Сохранить'
+    popupButton.disabled = false
   })
 }
 

@@ -16,7 +16,7 @@ const config = {
         method: 'PATCH',
         headers: {...config.headers},
         body:JSON.stringify(user)
-    })
+    })  
   }
 
   export const getUserProfile = () => {
