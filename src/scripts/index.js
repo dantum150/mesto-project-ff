@@ -1,18 +1,23 @@
-// @todo: Темплейт карточки
-
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
-import { createCard, removeCard, likeCard } from "../components/card.js"
-import { openPopup, closePopup } from "../components/popup.js"
-import { initialCards } from "./cards.js";
-import {enableValidation, clearValidation} from '../components/validation.js'
-import { getInitialCards, editUserProfile, initializationPage, postCard, editAvatar } from "../components/api.js";
-import '../pages/index.css'; 
+import {
+  createCard,
+  removeCard,
+  likeCard
+} from "../components/card.js"
+import {
+  openPopup,
+  closePopup
+} from "../components/popup.js"
+import {
+  enableValidation,
+  clearValidation
+} from '../components/validation.js'
+import {
+  editUserProfile,
+  initializationPage,
+  postCard,
+  editAvatar
+} from "../components/api.js";
+import '../pages/index.css';
 
 const cardsList = document.querySelector('.places__list')
 const editButton = document.querySelector('.profile__edit-button')
@@ -38,7 +43,15 @@ const popupEdit = document.querySelector('.popup_type_edit')
 const popupNewCard = document.querySelector('.popup_type_new-card')
 const nameInputCardName = document.querySelector('.popup__input_type_card-name')
 const linkInputUrl = document.querySelector('.popup__input_type_url')
-
+const config = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'form__input_type_error',
+  errorClass: 'form__input-error_active',
+  buttonSelector: '.popup__button',
+}
 
 
 initializationPage().then((data) => data[1].forEach(cardInfo => {
@@ -53,43 +66,27 @@ initializationPage().then((data) => data[1].forEach(cardInfo => {
   avatarInput.value = user.avatar
 
   const newCard = createCard(cardInfo, removeCard, likeCard, openImage, user._id)
-  cardsList.append(newCard) 
+  cardsList.append(newCard)
+})).then(() => enableValidation(config)).catch((err) => console.log(err))
+
+
+avatar.addEventListener('click', () => {
+  openPopup(avatarPopup)
 })
-).then(()=>enableValidation({
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_inactive',
-  inputErrorClass: 'form__input_type_error',
-  errorClass: 'form__input-error_active'
-}))
-
-
-avatar.addEventListener('click',() => {
-openPopup(avatarPopup)
-}
-)
 
 editButton.addEventListener('click', () => {
 
   nameInput.value = name.textContent
   jobInput.value = description.textContent
-  clearValidation(editUserForm, {
-    buttonSelector: '.popup__button',
-    inactiveButtonClass: 'popup__button_inactive',
-    inputSelector: '.popup__input', 
-    inputErrorClass: 'form__input_type_error',
-    errorClass: 'form__input-error_active'})
+  clearValidation(editUserForm, config)
+
+
   openPopup(editUserPopup)
 })
 
 addButton.addEventListener('click', () => {
-    clearValidation(createCardForm, {
-    inputSelector: '.popup__input', 
-    buttonSelector: '.popup__button',
-    inactiveButtonClass: 'popup__button_inactive',
-    inputErrorClass: 'form__input_type_error',
-    errorClass: 'form__input-error_active'})
+  clearValidation(createCardForm, config)
+
   openPopup(addCardPopup)
 })
 
@@ -107,33 +104,38 @@ function openImage(evt) {
 
 editUserForm.addEventListener('submit', handleFormSubmit);
 сreateCardForm.addEventListener('submit', handleCreateFormSubmit)
-avatarForm.addEventListener('submit',handleEditAvatar)
+avatarForm.addEventListener('submit', handleEditAvatar)
 
 
 
 
 function handleEditAvatar(evt) {
-evt.preventDefault();
-const popupButton = evt.target.querySelector('.popup__button')
+  evt.preventDefault();
+  const popupButton = evt.target.querySelector('.popup__button')
   popupButton.textContent = 'идет загрузка...'
   popupButton.disabled = true
 
-  editAvatar({avatar: linkInput.value}).then ((user)=> {
+  editAvatar({
+    avatar: linkInput.value
+  }).then((user) => {
     avatar.style.backgroundImage = `url(${user.avatar})`
     closePopup(popupAvatar)
   }).catch((e) => console.log(e)).finally(() => {
     popupButton.textContent = 'Сохранить'
     popupButton.disabled = false
-})
+  })
 }
 
 function handleFormSubmit(evt) {
-  evt.preventDefault(); 
+  evt.preventDefault();
   const popupButton = evt.target.querySelector('.popup__button')
   popupButton.textContent = 'идет загрузка...'
   popupButton.disabled = true
 
-  editUserProfile({name:nameInput.value, about:jobInput.value}).then((user) => {
+  editUserProfile({
+    name: nameInput.value,
+    about: jobInput.value
+  }).then((user) => {
     name.textContent = user.name
     description.textContent = user.about
     closePopup(popupEdit)
@@ -152,20 +154,18 @@ function handleCreateFormSubmit(evt) {
 
 
   const cardInfo = {
-  name: nameInputCardName.value,
-  link: linkInputUrl.value
+    name: nameInputCardName.value,
+    link: linkInputUrl.value
   }
 
   postCard(cardInfo).then(card => {
-    const newCard = createCard(card, removeCard, likeCard, openImage, card.owner._id) 
-    cardsList.prepend(newCard)  
-  
-    closePopup( popupNewCard)
+    const newCard = createCard(card, removeCard, likeCard, openImage, card.owner._id)
+    cardsList.prepend(newCard)
+
+    closePopup(popupNewCard)
     evt.target.reset()
-  }) .catch((e) => console.log(e)).finally(()=> {
+  }).catch((e) => console.log(e)).finally(() => {
     popupButton.textContent = 'Сохранить'
     popupButton.disabled = false
   })
 }
-
-
